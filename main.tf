@@ -52,11 +52,15 @@ resource "aws_security_group" "default" {
     cidr_blocks = var.allowed_cidr_blocks
   }
 
-  ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = -1
-    security_groups = var.security_groups
+  dynamic "ingress" {
+    iterator = sec_group
+    for_each = var.security_groups
+    content {
+      from_port       = 0
+      to_port         = 0
+      protocol        = -1
+      security_groups = sec_group
+    }
   }
 
   lifecycle {
